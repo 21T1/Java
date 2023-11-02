@@ -24,5 +24,11 @@ public class MathLib {
 		
 		System.out.println("Bán kính r = " + r + "\nChu vi: " + df.format(C) + "\nDiện tích: " + df.format(S));
 		
+		int deg = 55;
+		double rad = Math.PI * deg / 180;
+		System.out.println("Sin(" + deg + ") = " + Math.sin(rad));
+		System.out.println("Cos(" + deg + ") = " + Math.cos(rad));
+		System.out.println("Tan(" + deg + ") = " + Math.tan(rad));
+		System.out.println("Cotan(" + deg + ") = " + 1/Math.tan(rad));
 	}
 }
