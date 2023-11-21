@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">"Multilingue "</string>
+    <string name="spring">Printemps</string>
+    <string name="summer">Été</string>
+    <string name="autumn">Automne</string>
+    <string name="winter">Hiver</string>
+</resources>
