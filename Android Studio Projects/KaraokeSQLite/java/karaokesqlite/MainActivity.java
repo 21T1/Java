@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -34,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
     ListView lvFavour;
     ArrayList<Song> lstFavour;
     SongAdapter favourAdapter;
+
+    EditText txtSearch;
+    Button btnSearch;
+    ListView lvSearch;
+    ArrayList<Song> lstSearch;
+    SongAdapter searchAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +107,40 @@ public class MainActivity extends AppCompatActivity {
                     handleShowSong();
                 } else if (tabId.equalsIgnoreCase("t2")) {
                     handleShowFavour();
+                } else if (tabId.equalsIgnoreCase("t3")) {
+                    handleShowSearch();
+                }
+            }
+        });
+    }
+
+    private void handleShowSearch() {
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = txtSearch.getText().toString().trim();
+                if (name.matches("")) {
+                    Toast.makeText(
+                            MainActivity.this,
+                            "Nhập tên bài hát",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                } else {
+                    database = openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+                    Cursor cursor = database.rawQuery("SELECT * FROM ArirangSongList WHERE TENBH LIKE '%" + name + "%'", null);
+
+                    lstSearch.clear();
+                    while (cursor.moveToNext()) {
+                        lstSearch.add(new Song(
+                                cursor.getString(0),
+                                cursor.getString(1),
+                                cursor.getString(3),
+                                cursor.getInt(5)
+                        ));
+                    }
+                    cursor.close();
+
+                    searchAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -153,6 +196,11 @@ public class MainActivity extends AppCompatActivity {
         tab2.setContent(R.id.tab2);
         tabHost.addTab(tab2);
 
+        TabHost.TabSpec tab3 = tabHost.newTabSpec("t3");
+        tab3.setIndicator("", getResources().getDrawable(R.drawable.search));
+        tab3.setContent(R.id.tab3);
+        tabHost.addTab(tab3);
+
         lvSongs = findViewById(R.id.lvSongs);
         lstSong = new ArrayList<>();
         songAdapter = new SongAdapter(
@@ -170,6 +218,17 @@ public class MainActivity extends AppCompatActivity {
                 lstFavour
         );
         lvFavour.setAdapter(favourAdapter);
+
+        txtSearch = findViewById(R.id.txtSearch);
+        btnSearch = findViewById(R.id.btnSearch);
+        lvSearch = findViewById(R.id.lvSearch);
+        lstSearch = new ArrayList<>();
+        searchAdapter = new SongAdapter(
+                MainActivity.this,
+                R.layout.item,
+                lstSearch
+        );
+        lvSearch.setAdapter(searchAdapter);
     }
 
 }
